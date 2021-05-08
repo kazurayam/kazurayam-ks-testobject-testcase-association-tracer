@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="AssociatorTestSuite" time="2.357" tests="1" failures="0" skips="0" errors="0">
+   <testsuite name="AssociatorTestSuite" tests="1" failures="0" errors="0" time="2.357" skips="0" timestamp="2021-05-08 22:28:00" hostname="kazuakiurayama - kazuakinoair.airport" id="Test Suites/junittest/AssociatorTestSuite">
+      <properties>
+         <property name="deviceName" value=""/>
+         <property name="devicePlatform" value=""/>
+         <property name="logFolder" value="/Users/kazuakiurayama/katalon-workspace/kazurayam-ks-testobject-testcase-association-tracer/Reports/20210508_222751/junittest/AssociatorTestSuite/20210508_222751"/>
+         <property name="logFiles" value="/Users/kazuakiurayama/katalon-workspace/kazurayam-ks-testobject-testcase-association-tracer/Reports/20210508_222751/junittest/AssociatorTestSuite/20210508_222751/execution0.log"/>
+         <property name="attachments" value=""/>
+         <property name="hostName" value="kazuakiurayama - kazuakinoair.airport"/>
+         <property name="hostAddress" value="192.168.0.9"/>
+         <property name="os" value="Mac OS X 64bit"/>
+         <property name="katalonVersion" value="7.9.1.208"/>
+      </properties>
+      <testcase name="Test Cases/junittest/AssociatorTestRunner" time="0.78" classname="Test Cases/junittest/AssociatorTestRunner" status="PASSED">
+         <system-out><![CDATA[2021-05-08 22:28:01 - [TEST_CASE][PASSED] - Test Cases/junittest/AssociatorTestRunner: Test Cases/junittest/AssociatorTestRunner
+
+2021-05-08 22:28:01 - [TEST_STEP][PASSED] - Start listener action : beforeTestCase: null
+
+2021-05-08 22:28:01 - [TEST_STEP][PASSED] - associator.beforeTestCase(testCaseContext): null
+
+2021-05-08 22:28:01 - [TEST_STEP][PASSED] - JUnitCustomKeywords.runWithJUnitRunner(com.kazurayam.ks.testobject.AssociatorTest): RunWith 'com.kazurayam.ks.testobject.AssociatorTest' was passed
+
+2021-05-08 22:28:01 - [TEST_CASE][PASSED] - Start Test Case : test_modifyTestObject(com.kazurayam.ks.testobject.AssociatorTest): test_modifyTestObject(com.kazurayam.ks.testobject.AssociatorTest)
+
+2021-05-08 22:28:02 - [MESSAGE][PASSED] - RunWith 'com.kazurayam.ks.testobject.AssociatorTest' was passed]]></system-out>
+         <system-err><![CDATA[]]></system-err>
+      </testcase>
+      <system-out><![CDATA[2021-05-08 22:28:00 - [TEST_SUITE][PASSED] - AssociatorTestSuite: Test Cases/junittest/AssociatorTestRunner]]></system-out>
+      <system-err><![CDATA[]]></system-err>
+   </testsuite>
+</testsuites>
