@@ -4,6 +4,7 @@ import com.kazurayam.ks.globalvariable.ExpandoGlobalVariable
 import com.kms.katalon.core.context.TestCaseContext
 import com.kms.katalon.core.context.TestSuiteContext
 import com.kms.katalon.core.testobject.TestObject
+import com.kms.katalon.core.testobject.ObjectRepository
 import com.kms.katalon.core.configuration.RunConfiguration
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -19,7 +20,7 @@ public class Associator {
 	public static final String OUTPUT_DIR_DEFAULT = "build/TestCase_TestObject_Association"
 	public static final String REPORT_NAME = "TestObjects_usage_report.md"
 
-	private Boolean hasModifiedTestObjectClass = false
+	private Boolean hasModifiedKatalonClasses = false
 
 	private Path outputDir
 
@@ -48,7 +49,7 @@ public class Associator {
 		//println "Associator::beforeTestSuite() was called by ${testSuiteContext.getTestSuiteId()}"
 		ExpandoGlobalVariable.addGlobalVariable(
 				GLOBALVARIABLE_CURRENT_TESTSUITEID, testSuiteContext.getTestSuiteId())
-		this.hasModifiedTestObjectClass = modifyTestObjectClass()
+		this.hasModifiedKatalonClasses = modifyKatalonClasses()
 	}
 
 	/**
@@ -59,9 +60,9 @@ public class Associator {
 		//println "Associator::beforeTestCase() was called by ${testCaseContext.getTestCaseId()}"
 		ExpandoGlobalVariable.addGlobalVariable(
 				GLOBALVARIABLE_CURRENT_TESTCASEID, testCaseContext.getTestCaseId())
-		if (! hasModifiedTestObjectClass) {
+		if (! hasModifiedKatalonClasses) {
 			// TestClass was executed immediately without wrapping TestSuite
-			this.hasModifiedTestObjectClass = modifyTestObjectClass()
+			this.hasModifiedKatalonClasses = modifyKatalonClasses()
 		}
 	}
 
@@ -81,15 +82,21 @@ public class Associator {
 	 * the pair of TestCaseID and TestObjectID; effectively
 	 * the AssociationTracer can record which TestCase used which TestObject.
 	 * 
-	 * @param tracer
+	 * The source code of Katalon API is here:
+	 * - TestObject https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java
+	 * - ObjectRepository https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java
+	 * 
 	 */
-	/* Learned
-	 * https://stackoverflow.com/questions/5907432/groovy-adding-code-to-a-constructor
+	/* Learned the Groovy Metaprogramming at
+	 * - https://stackoverflow.com/questions/5907432/groovy-adding-code-to-a-constructor
+	 * - https://www.baeldung.com/groovy-metaprogramming
 	 */
-	Boolean modifyTestObjectClass() {
+	Boolean modifyKatalonClasses() {
 		AssociationTracer tracer = AssociationTracer.getInstance()
+		//
 		TestObject.metaClass.constructor = { String objectId ->
-			println "[Associator::modifyTestObjectClass] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\' executed \'new TestObject(\"${objectId}\")\'"
+
+			println "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\' called \'new TestObject(\"${objectId}\")\'"
 
 			// notify the AssociationTracer singleton instance
 			// of the pair of (TestCaseId, TestObjectId)
@@ -99,6 +106,13 @@ public class Associator {
 			def constructor = TestObject.class.getConstructor(String.class)
 			// create the new instance and return it just as the original constructor does
 			return constructor.newInstance(objectId)
+		}
+		//
+		ObjectRepository.metaClass.'static'.invokeMethod = { String methodName, args ->
+			if (methodName == "findTestObject") {
+				println "[Associator::modifyKatalonClasses]  Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\' called \'ObjectRepository.findTestObject(\"${args[0]}\")\'"
+			}
+			return delegate.metaClass.getMetaMethod(methodName, args).invoke(delegate, args)
 		}
 		return true
 	}
