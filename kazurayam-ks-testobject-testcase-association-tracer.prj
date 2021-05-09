@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
    <description></description>
-   <name>kazurayam-ks-testobject-testcase-association-tracer</name>
+   <name>kazurayam-ks-testobject-usage-report</name>
    <tag></tag>
    <UUID>97653017-8dc9-46d9-b60d-22572d45c748</UUID>
    <migratedVersion>5.9.0</migratedVersion>

@@ -18,9 +18,9 @@ import internal.GlobalVariable
  * @param tracer
  * @param outputDir
  */
-public class ReverseTestObjectLookupReporter implements Reporter {
+public class TestObjectUsageReporter implements Reporter {
 
-	public static final String OUTPUT_FILENAME = "reverse_testobject_lookup.md"
+	public static final String OUTPUT_FILENAME = "testobject_usage_report.md"
 
 	private Associator associator
 	private TestSuiteContext testSuiteContext
@@ -47,12 +47,12 @@ public class ReverseTestObjectLookupReporter implements Reporter {
 			return this
 		}
 
-		public ReverseTestObjectLookupReporter build() {
-			return new ReverseTestObjectLookupReporter(this)
+		public TestObjectUsageReporter build() {
+			return new TestObjectUsageReporter(this)
 		}
 	}
 
-	private ReverseTestObjectLookupReporter(Builder builder) {
+	private TestObjectUsageReporter(Builder builder) {
 		associator = builder.associator
 		testSuiteContext = builder.testSuiteContext
 		outputDir = builder.outputDir
@@ -68,7 +68,7 @@ public class ReverseTestObjectLookupReporter implements Reporter {
 		AssociationTracer tracer = associator.getTracer()
 		ObjectRepositoryWrapper repos = new ObjectRepositoryWrapper()
 		StringBuilder sb = new StringBuilder()
-		sb.append("# Reverse TestObject Lookup\n\n")
+		sb.append("# TestObject Usage Report\n\n")
 		sb.append("- TestSuite: ${testSuiteContext.getTestSuiteId()}\n\n")
 		//
 		compileTestObjectReferenceCount(sb, tracer, repos)
