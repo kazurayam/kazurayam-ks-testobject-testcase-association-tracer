@@ -21,13 +21,13 @@ public class AssociationTracerTest {
 	}
 
 	@Test
-	void test_callersAll() {
-		assertTrue(tracer.callersAll().contains("testCaseX"))
+	void test_allCallers() {
+		assertTrue(tracer.allCallers().contains("testCaseX"))
 	}
 
 	@Test
-	void test_calleesAll() {
-		assertTrue(tracer.calleesAll().contains("testObjectY"))
+	void test_allCallees() {
+		assertTrue(tracer.allCallees().contains("testObjectY"))
 	}
 
 	@Test

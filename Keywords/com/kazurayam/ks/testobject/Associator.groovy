@@ -42,7 +42,7 @@ public class Associator {
 	public static AssociationTracer getTracer() {
 		return AssociationTracer.getInstance()
 	}
-
+	
 	/**
 	 * modify methods of Katalon-builtin classes
 	 * - com.kms.katalon.core.testobject.ObjectRepository::findTestObject(String testObjectRelativeId)
@@ -64,10 +64,8 @@ public class Associator {
 		AssociationTracer tracer = AssociationTracer.getInstance()
 		//
 		ObjectRepository.metaClass.'static'.invokeMethod = { String methodName, args ->
-			String msgPrefix = "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\'"
 			if (methodName == "findTestObject") {
-				String testObjectId = ObjectRepository.getTestObjectId(args[0])
-				//println msgPrefix + " called \'ObjectRepository.findTestObject(\"${testObjectId}\", ...)\'"
+				String testObjectId = ObjectRepository.getTestObjectId(args[0]).replaceAll("Object Repository/", "")
 				// notify the AssociationTracer singleton instance
 				// of the pair of (TestCaseId, TestObjectId)
 				tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], testObjectId)
@@ -76,11 +74,10 @@ public class Associator {
 		}
 		//
 		TestObject.metaClass.constructor = { String testObjectId ->
-			String msgPrefix = "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\'"
-			//println msgPrefix + " called \'new TestObject(\"${testObjectId}\")\'"
 			// notify the AssociationTracer singleton instance
 			// of the pair of (TestCaseId, TestObjectId)
-			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], testObjectId)
+			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], 
+				testObjectId.replaceAll("Object Repository/", ''))
 			// use reflection to get the original constructor
 			def constructor = TestObject.class.getConstructor(String.class)
 			// create the new instance and return it just as the original constructor does

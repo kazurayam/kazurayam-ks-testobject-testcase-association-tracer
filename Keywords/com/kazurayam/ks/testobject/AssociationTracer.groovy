@@ -30,39 +30,39 @@ public class AssociationTracer {
 		associations.add(new Association(caller, callee));
 	}
 
-	public List<String> calleesAll() {
-		List<String> callees = new ArrayList<String>();
+	public Set<String> allCallees() {
+		Set<String> callees = new HashSet<String>();
 		for (Association assoc : associations) {
 			callees.add(assoc.getCallee());
 		}
-		return callees.toSorted();
+		return callees;
 	}
 
-	public List<String> callersAll() {
-		List<String> callers = new ArrayList<String>();
+	public Set<String> allCallers() {
+		Set<String> callers = new HashSet<String>();
 		for (Association assoc : associations) {
 			callers.add(assoc.getCaller());
 		}
-		return callers.toSorted();
+		return callers;
 	}
 
-	public List<String> callersOf(String callee) {
-		List<String> callers = new ArrayList<String>();
+	public Set<String> callersOf(String callee) {
+		Set<String> callers = new HashSet<String>();
 		for (Association assoc : associations) {
 			if (assoc.getCallee() == callee) {
 				callers.add(assoc.getCaller());
 			}
 		}
-		return callers.toSorted();
+		return callers;
 	}
 
-	public List<String> calleesBy(String caller) {
-		List<String> callees = new ArrayList<String>();
+	public Set<String> calleesBy(String caller) {
+		Set<String> callees = new HashSet<String>();
 		for (Association assoc : associations) {
 			if (assoc.getCaller() == caller) {
 				callees.add(assoc.getCallee());
 			}
 		}
-		return callees.toSorted();
+		return callees;
 	}
 }

@@ -3,7 +3,7 @@ import java.nio.file.Paths
 
 import com.kazurayam.ks.testobject.Associator
 import com.kazurayam.ks.testobject.Reporter
-import com.kazurayam.ks.testobject.TestObjectsUsageReporter
+import com.kazurayam.ks.testobject.ReverseTestObjectLookupReporter
 import com.kms.katalon.core.annotation.AfterTestSuite
 import com.kms.katalon.core.annotation.BeforeTestCase
 import com.kms.katalon.core.annotation.BeforeTestSuite
@@ -15,7 +15,7 @@ import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 
 class AssociatorDriver {
 
-	private static final String OUTPUTDIR = "build/TestObjectsUsage"
+	private static final String OUTPUTDIR = "build/reports"
 
 	private Associator associator
 	private Path outputDir = Paths.get(RunConfiguration.getProjectDir()).resolve(OUTPUTDIR)
@@ -37,7 +37,7 @@ class AssociatorDriver {
 	@AfterTestSuite
 	def afterTestSuite(TestSuiteContext testSuiteContext) {
 		Reporter reporter =
-				new TestObjectsUsageReporter.Builder(associator, testSuiteContext)
+				new ReverseTestObjectLookupReporter.Builder(associator, testSuiteContext)
 				.outputDir(outputDir)
 				.build()
 		reporter.report()
