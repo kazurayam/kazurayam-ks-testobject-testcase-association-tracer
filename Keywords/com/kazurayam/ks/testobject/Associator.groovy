@@ -77,42 +77,47 @@ public class Associator {
 	}
 
 	/**
-	 * modify com.kms.katalon.core.testobject.TestObject class 
-	 * so that its constructor notifies the AssociationTracer of 
-	 * the pair of TestCaseID and TestObjectID; effectively
-	 * the AssociationTracer can record which TestCase used which TestObject.
+	 * modify methods of Katalon-builtin classes
+	 * - com.kms.katalon.core.testobject.ObjectRepository::findTestObject(String testObjectRelativeId)
+	 * - com.kms.katalon.core.testobject.TestObject::constructor
 	 * 
+	 * so that these methods notify the AssociationTracer of the pair of TestCaseID and TestObjectID
+	 * when invoked; effectively the AssociationTracer can record which TestCase used which TestObject.
+	 */
+	/**
 	 * The source code of Katalon API is here:
 	 * - TestObject https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java
 	 * - ObjectRepository https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java
 	 * 
-	 */
-	/* Learned the Groovy Metaprogramming at
+	 * Learned the Groovy Metaprogramming at
 	 * - https://stackoverflow.com/questions/5907432/groovy-adding-code-to-a-constructor
 	 * - https://www.baeldung.com/groovy-metaprogramming
 	 */
 	Boolean modifyKatalonClasses() {
 		AssociationTracer tracer = AssociationTracer.getInstance()
 		//
-		TestObject.metaClass.constructor = { String objectId ->
-
-			println "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\' called \'new TestObject(\"${objectId}\")\'"
-
+		ObjectRepository.metaClass.'static'.invokeMethod = { String methodName, args ->
+			String msgPrefix = "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\'"
+			if (methodName == "findTestObject") {
+				String testObjectId = args[0]
+				println msgPrefix + " called \'ObjectRepository.findTestObject(\"${testObjectId}\", ...)\'"
+				// notify the AssociationTracer singleton instance
+				// of the pair of (TestCaseId, TestObjectId)
+				tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], testObjectId)
+			}
+			return delegate.metaClass.getMetaMethod(methodName, args).invoke(delegate, args)
+		}
+		//
+		TestObject.metaClass.constructor = { String testObjectId ->
+			String msgPrefix = "[Associator::modifyKatalonClasses] Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\'"
+			println msgPrefix + " called \'new TestObject(\"${testObjectId}\")\'"
 			// notify the AssociationTracer singleton instance
 			// of the pair of (TestCaseId, TestObjectId)
-			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], objectId)
-
+			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], testObjectId)
 			// use reflection to get the original constructor
 			def constructor = TestObject.class.getConstructor(String.class)
 			// create the new instance and return it just as the original constructor does
-			return constructor.newInstance(objectId)
-		}
-		//
-		ObjectRepository.metaClass.'static'.invokeMethod = { String methodName, args ->
-			if (methodName == "findTestObject") {
-				println "[Associator::modifyKatalonClasses]  Caller \'${GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID]}\' called \'ObjectRepository.findTestObject(\"${args[0]}\")\'"
-			}
-			return delegate.metaClass.getMetaMethod(methodName, args).invoke(delegate, args)
+			return constructor.newInstance(testObjectId)
 		}
 		return true
 	}
