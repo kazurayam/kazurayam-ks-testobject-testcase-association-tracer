@@ -1,8 +1,7 @@
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+
 import com.kazurayam.ks.testobject.TestObjectFactory
 import com.kms.katalon.core.testobject.TestObject
-import com.kms.katalon.core.testobject.ConditionType
-
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 
 WebUI.openBrowser('')
@@ -27,7 +26,7 @@ WebUI.click(findTestObject('Object Repository/Page_CURA Healthcare Service/input
 WebUI.setText(findTestObject('Object Repository/Page_CURA Healthcare Service/input_Visit Date (Required)_visit_date'), '')
 
 // create a TestObject on the fly
-TestObject tObj = TestObjectFactory.createTestObjectByXPath("(.//*[normalize-space(text()) and normalize-space(.)='Sa'])[1]/following::td[20]")
+TestObject tObj = TestObjectFactory.createTestObjectByXPath("Visit Date", "(.//*[normalize-space(text()) and normalize-space(.)='Sa'])[1]/following::td[20]")
 WebUI.click(tObj)
 
 WebUI.setText(findTestObject('Object Repository/Page_CURA Healthcare Service/textarea_Comment_comment'), 'ThisIsAComment')

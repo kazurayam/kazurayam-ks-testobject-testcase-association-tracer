@@ -9,10 +9,10 @@ public class AssociationTracer {
 
 	private static AssociationTracer singleton = null;
 
-	private final List<Association> associations;
+	private final Set<Association> associations;
 
 	private AssociationTracer() {
-		associations = new ArrayList<Association>();
+		associations = new HashSet<Association>();
 	}
 
 	public static AssociationTracer getInstance() {

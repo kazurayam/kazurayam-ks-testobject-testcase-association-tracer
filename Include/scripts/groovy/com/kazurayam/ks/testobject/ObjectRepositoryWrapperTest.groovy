@@ -9,22 +9,31 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4.class)
 public class ObjectRepositoryWrapperTest {
-	
+
 	ObjectRepositoryWrapper instance
-	
+
 	@Before
 	void setup() {
 		instance = new ObjectRepositoryWrapper()
 	}
-	
+
 	@Test
-	void test_contains_true() {
-		assertTrue(instance.contains("Page_CURA Healthcare Service/a_Make Appointment"))
+	void test_includes_true() {
+		assertTrue(instance.includes("Page_CURA Healthcare Service/a_Make Appointment"))
 	}
-	
+
 	@Test
-	void test_contains_false() {
-		assertFalse(instance.contains("foo_bar_baz"))
+	void test_includes_false1() {
+		assertFalse(instance.includes("Appointment"))
 	}
-	
+
+	@Test
+	void test_includes_false2() {
+		assertFalse(instance.includes("foo_bar_baz"))
+	}
+
+	@Test
+	void test_includes_false3() {
+		assertFalse(instance.includes("Visit Date"))
+	}
 }

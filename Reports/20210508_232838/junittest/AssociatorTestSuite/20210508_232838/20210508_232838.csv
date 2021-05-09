@@ -1,6 +1,0 @@
-Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
-AssociatorTestSuite,,,,2021-05-08 23:28:46,2021-05-08 23:28:48,2.004s,PASSED
-,,,,,,,
-Test Cases/junittest/AssociatorTestRunner,,,,2021-05-08 23:28:47,2021-05-08 23:28:48,0.704s,PASSED
-Start listener action : beforeTestCase,,,,2021-05-08 23:28:47,2021-05-08 23:28:48,0.028s,PASSED
-JUnitCustomKeywords.runWithJUnitRunner(com.kazurayam.ks.testobject.AssociatorTest),,,,2021-05-08 23:28:48,2021-05-08 23:28:48,0.445s,PASSED

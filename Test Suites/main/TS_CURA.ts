@@ -17,4 +17,10 @@
       <isRun>true</isRun>
       <testCaseId>Test Cases/main/TC_CURA</testCaseId>
    </testCaseLink>
+   <testCaseLink>
+      <guid>156a23f8-78f3-4ec1-95ae-0092c2cf4c52</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/main/TC_CURA - more</testCaseId>
+   </testCaseLink>
 </TestSuiteEntity>
