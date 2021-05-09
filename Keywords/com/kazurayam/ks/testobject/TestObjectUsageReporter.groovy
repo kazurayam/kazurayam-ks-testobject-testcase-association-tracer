@@ -120,18 +120,18 @@ public class TestObjectUsageReporter implements Reporter {
 	}
 
 	private void compileForwardReferenceDetail(StringBuilder sb,
-		AssociationTracer tracer, ObjectRepositoryWrapper repos) {
-	sb.append("## Forward Reference Detail\n\n")
-	sb.append("| # | Test Case refers | Test Object | in Repos? |\n")
-	sb.append("| - | ---------------- | ----------- | --------- |\n")
-	List<String> testCases = new ArrayList<String>(tracer.allCallers()).toSorted()
-	testCases.eachWithIndex { testCase, index ->
-		List<String> testObjects = new ArrayList<String>(tracer.calleesBy(testCase)).toSorted()
-		testObjects.each { testObject ->
-			Boolean inRepos = repos.includes(testObject)
-			sb.append("| ${index + 1} | `${testCase}` | ${inRepos} | `${testObject}` |")
-			sb.append("\n")
+			AssociationTracer tracer, ObjectRepositoryWrapper repos) {
+		sb.append("## Forward Reference Detail\n\n")
+		sb.append("| # | Test Case refers | Test Object | in Repos? |\n")
+		sb.append("| - | ---------------- | ----------- | --------- |\n")
+		List<String> testCases = new ArrayList<String>(tracer.allCallers()).toSorted()
+		testCases.eachWithIndex { testCase, index ->
+			List<String> testObjects = new ArrayList<String>(tracer.calleesBy(testCase)).toSorted()
+			testObjects.each { testObject ->
+				Boolean inRepos = repos.includes(testObject)
+				sb.append("| ${index + 1} | `${testCase}` | `${testObject}` | ${inRepos} |")
+				sb.append("\n")
+			}
 		}
 	}
-}
 }
