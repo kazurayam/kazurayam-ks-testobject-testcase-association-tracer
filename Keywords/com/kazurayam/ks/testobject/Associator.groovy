@@ -1,6 +1,11 @@
 package com.kazurayam.ks.testobject
 
+import java.nio.file.Paths
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
 import com.kazurayam.ks.globalvariable.ExpandoGlobalVariable
+import com.kms.katalon.core.configuration.RunConfiguration
 import com.kms.katalon.core.context.TestCaseContext
 import com.kms.katalon.core.context.TestSuiteContext
 import com.kms.katalon.core.testobject.ObjectRepository
@@ -10,7 +15,9 @@ import internal.GlobalVariable
 
 public class Associator {
 
-	public static final String GLOBALVARIABLE_CURRENT_TESTCASEID  = "CURRENT_TESTCASEID__"
+	public static final String GLOBALVARIABLE_CURRENT_TESTSUITE_ID = "CURRENT_TESTSUITE_ID__"
+	public static final String GLOBALVARIABLE_CURRENT_TESTSUITE_TIMESTAMP = "CURRENT_TESTSUITE_TIMESTAMP__"
+	public static final String GLOBALVARIABLE_CURRENT_TESTCASE_ID = "CURRENT_TESTCASE_ID__"
 
 	private Boolean hasModifiedKatalonClasses = false
 
@@ -22,7 +29,27 @@ public class Associator {
 	 */
 	public void beforeTestSuite(TestSuiteContext testSuiteContext) {
 		//println "Associator::beforeTestSuite() was called by ${testSuiteContext.getTestSuiteId()}"
+		ExpandoGlobalVariable.addGlobalVariable(
+				GLOBALVARIABLE_CURRENT_TESTSUITE_ID, testSuiteContext.getTestSuiteId())
+		ExpandoGlobalVariable.addGlobalVariable(
+				GLOBALVARIABLE_CURRENT_TESTSUITE_TIMESTAMP, this.getTestSuiteTimestamp())
+		// cast a spell!
 		this.hasModifiedKatalonClasses = modifyKatalonClasses()
+	}
+
+	/**
+	 * @return Local time stamp when the Test Suite started, such as "2021-12-03T10:15:30"
+	 */
+	String getTestSuiteTimestamp() throws DateTimeParseException {
+		String reportFolder = RunConfiguration.getReportFolder()
+		if (reportFolder != null) {
+			String katalonTimestamp = Paths.get(reportFolder).getFileName().toString()
+			DateTimeFormatter inputDtf = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+			DateTimeFormatter outputDtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+			return outputDtf.format(inputDtf.parse(katalonTimestamp))
+		} else {
+			return "N/A"
+		}
 	}
 
 	/**
@@ -32,9 +59,10 @@ public class Associator {
 	public void beforeTestCase(TestCaseContext testCaseContext) {
 		//println "Associator::beforeTestCase() was called by ${testCaseContext.getTestCaseId()}"
 		ExpandoGlobalVariable.addGlobalVariable(
-				GLOBALVARIABLE_CURRENT_TESTCASEID, testCaseContext.getTestCaseId())
+				GLOBALVARIABLE_CURRENT_TESTCASE_ID, testCaseContext.getTestCaseId())
 		if (! hasModifiedKatalonClasses) {
 			// TestClass was executed immediately without wrapping TestSuite
+			// so cast a spell now!
 			this.hasModifiedKatalonClasses = modifyKatalonClasses()
 		}
 	}
@@ -42,7 +70,7 @@ public class Associator {
 	public static AssociationTracer getTracer() {
 		return AssociationTracer.getInstance()
 	}
-	
+
 	/**
 	 * modify methods of Katalon-builtin classes
 	 * - com.kms.katalon.core.testobject.ObjectRepository::findTestObject(String testObjectRelativeId)
@@ -68,7 +96,7 @@ public class Associator {
 				String testObjectId = ObjectRepository.getTestObjectId(args[0]).replaceAll("Object Repository/", "")
 				// notify the AssociationTracer singleton instance
 				// of the pair of (TestCaseId, TestObjectId)
-				tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], testObjectId)
+				tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASE_ID], testObjectId)
 			}
 			return delegate.metaClass.getMetaMethod(methodName, args).invoke(delegate, args)
 		}
@@ -76,8 +104,8 @@ public class Associator {
 		TestObject.metaClass.constructor = { String testObjectId ->
 			// notify the AssociationTracer singleton instance
 			// of the pair of (TestCaseId, TestObjectId)
-			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASEID], 
-				testObjectId.replaceAll("Object Repository/", ''))
+			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASE_ID],
+					testObjectId.replaceAll("Object Repository/", ''))
 			// use reflection to get the original constructor
 			def constructor = TestObject.class.getConstructor(String.class)
 			// create the new instance and return it just as the original constructor does

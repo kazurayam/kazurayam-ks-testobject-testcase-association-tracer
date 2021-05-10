@@ -12,12 +12,6 @@
    <rerunImmediately>false</rerunImmediately>
    <testSuiteGuid>bc9c54d4-f9f6-4c06-a41d-e830d88a22fa</testSuiteGuid>
    <testCaseLink>
-      <guid>595f5780-112b-49dd-9891-b539b172392b</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
-      <testCaseId>Test Cases/junittest/ObjectRepositoryWrapperTestRunner</testCaseId>
-   </testCaseLink>
-   <testCaseLink>
       <guid>260a4f39-a741-4a1f-8708-5975ab8f3679</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
@@ -34,5 +28,17 @@
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/junittest/AssociatorTestRunner</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>595f5780-112b-49dd-9891-b539b172392b</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/junittest/ObjectRepositoryWrapperTestRunner</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>a2b572b9-c036-46cc-bc4d-f5309a2ad38d</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/junittest/TestObjectUsageReporterTestRunner</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

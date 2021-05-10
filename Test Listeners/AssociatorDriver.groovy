@@ -34,13 +34,23 @@ class AssociatorDriver {
 		associator.beforeTestCase(testCaseContext)
 	}
 
+	
 	@AfterTestSuite
 	def afterTestSuite(TestSuiteContext testSuiteContext) {
-		Reporter reporter =
-				new TestObjectUsageReporter.Builder(associator, testSuiteContext)
-				.outputDir(outputDir)
-				.build()
-		reporter.report()
+		Reporter summary = new TestObjectUsageReporter.Builder(associator, testSuiteContext)
+							// .composition(["UNUSED", "COUNT"])
+							.outputDir(outputDir)
+							.outputFilename('testobject_usage_summary.md')
+							.build()
+		summary.write()
+		
+		Reporter full = new TestObjectUsageReporter.Builder(associator, testSuiteContext)
+							.composition(["UNUSED", "COUNT", "REVERSE", "FORWARD"])
+							.outputDir(outputDir)
+							.outputFilename('testobject_usage_full.md')
+							.build()
+		full.write()
+		
 		WebUI.comment("TestObject Usage Report was written into ${outputDir.toAbsolutePath()}")
 	}
 }

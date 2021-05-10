@@ -4,7 +4,11 @@ import java.nio.file.Path
 
 public interface Reporter {
 
-	public void report()
+	public String report()
 
 	public Path getOutputDir()
+
+	public String getOutputFilename()
+	
+	public void write()
 }
