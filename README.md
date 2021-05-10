@@ -1,8 +1,27 @@
 TestObject Usage Report
 ====================
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Background](#background)
+- [Problem to solve](#problem-to-solve)
+- [Solution](#solution)
+- [Description](#description)
+  - [Sample report](#sample-report)
+    - [(1) Test Objects in the Object Repository, used by testcases](#1-test-objects-in-the-object-repository-used-by-testcases)
+    - [(2) Test Objects in the Object Repository, unused at all](#2-test-objects-in-the-object-repository-unused-at-all)
+    - [(3) Test Objects dynamically instanciated by code](#3-test-objects-dynamically-instanciated-by-code)
+  - [How to run the demo](#how-to-run-the-demo)
+  - [How to install the plugin into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
+  - [How to enable the report in your project](#how-to-enable-the-report-in-your-project)
+  - [How the plugin is designed](#how-the-plugin-is-designed)
+  - [Cautions](#cautions)
+- [Appendiex](#appendiex)
+  - [Table Of Contents](#table-of-contents)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Background
 
