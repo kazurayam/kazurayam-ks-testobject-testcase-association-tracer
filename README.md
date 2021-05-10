@@ -4,7 +4,17 @@ TestObject Usage Report
 <!-- START doctoc -->
 <!-- END doctoc -->
 
+This project is a [Katalon Studio]() project where I have developed a plug-in module named
+*kazurayam-ks-testobject-usage-report*. This project is zipped and distributed at the 
+[Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page.
+You can download the zip file, unzip it, open it with your local Katalon Studio.
+
+This project was developed using Katalon Studio ver7.9.1, but it should work on any version 7.0+.
+
+I developed this plug-in for my own sake. I suppose it would be useful other Katalon users, especially if your Katalon Studio project has too many TestObjects with a significant portion is unused so that you want to know which TestObjects are not actually used by tests.
+
 # Background
+
 
 There are 2 ways of creating a Test Object.
 
@@ -62,11 +72,16 @@ into your project. Just copy it. No code change for customization is required.
 
 ## How the plugin is designed
 
-The report will be compiled as a by-product of running a Test Suite.
+Do you want to understand how the `kazurayam-ks-testobject-usage-report` plugin is designed?
 
-## Cautions
+The entry point for you is to read the source code of 
 
-May not be right!
+- [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy)
+
+Let's have a look at it.
+
+
+
 
 # Appendiex
 
