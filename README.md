@@ -182,7 +182,7 @@ The report will be unreliable when any Test Case failed and stopped. The stateme
 
 ### "if ... then ... else" statement makes the report unreliable
 
-The following Test Case is too difficult for my plugin:
+The following Test Case is too difficult for the plug-in:
 
 ```
 TestObject tObj
@@ -195,7 +195,7 @@ if (conditon) {
 }
 ```
 
-Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". My plug-in is not capable of reporting that *both of "foo" and "bar" are used*.
+Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". The plug-in can't report that *both of "foo" and "bar" are used*.
 
 >The following code shows a possible workaround for this difficulty:
 
@@ -203,25 +203,25 @@ Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other 
 TestObject foo = new TestObject("foo")
 TestObject bar = new TestObject("bar)
 if (conditon) {
-    // use foo 
+    // use foo
 } else {
-    //use bar
+    // use bar
 }
 ```
 
 ## How to install the plugin into your Katalon Studio
 
-Here I assume you have already created a Katalon Studio project with running Test Cases and Test Suite. 
+Here I assume you have already created a Katalon Studio project with running Test Cases and Test Suite.
 
 1. download `kazurayam-ks-testobject-usage-report-x.x.x.jar` from the [Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page.
 2. place the jar in the `<projectDir>/Plugins` folder
 3. stop&restart Katalon Studio
 
-## How to enable the report in your project
+## How to let your project to report "Test Object Usage"
 
 ### (1) create a Test Listener
 
-You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. The name can be any. You can copy and paste the following sample code: 
+You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. The name can be any. Please copy and paste the following code:
 
 - [`Test Listeners/AssociationDriver`](Test%20Listeners/AssociatorDriver.groovy)
 
@@ -288,7 +288,7 @@ public class Associator {
     ...
 ```
 
-The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). The `AssociationTracer`'s *static* instance exists in the Test Listener's scope. When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer`' instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* that appeared. The Test Lister can get access to the trace information via the `accociator` variable in it.
+The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). The `AssociationTracer`'s *static* instance exists in the Test Listener's scope. When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Lister can get access to the information via the `accociator` variable.
 
 
 ### (2) how the reports are compiled
@@ -316,17 +316,17 @@ The `@AfterTestSuite`-annotated method of the Test Listener drives `TestObjectUs
     }
 ```
 
-One output from the `TestObjectUsageReporter` can be composed of 4 types of reports: "UNUSUED", "COUT", "REVERSE", "FORWARD". By **compositon(List[String])** method of `com.kazurayam.ks.testobject.TestObjectUsageReporter.Buidler` class, you can choose which type to output, and you can specify the order in a file. The method call is optional; will default to `.composition(["UNUSED", "COUNT"])`. The "REVERSE" and "FORWARD" report could be too length if you have hundreds of Test Objects in your project.
+A single file output from the `TestObjectUsageReporter` can be composed of 4 types of reports: "UNUSUED", "COUNT", "REVERSE" and "FORWARD". By **compositon(List[String])** method of `com.kazurayam.ks.testobject.TestObjectUsageReporter.Buidler` class, you can choose which type to output, and you can specify the order in a file. The method call is optional; will default to `.composition(["UNUSED", "COUNT"])`. The "REVERSE" and "FORWARD" report could be long if you have many Test Cases x many Test Objects in your project.
 
-By **outputDir(Path)** method, you can optionally specify the directory to save the output file. `outputDir(Path)` is optional; will default to `"./build/reports"`.
+By **outputDir(Path)** method, you can optionally specify the directory to save the output files. `outputDir(Path)` is optional; will default to `"./build/reports"`.
 
 By **outputFilename(String)** method, you can specify the name of the output file. It is optional; will default to `"testobject_usage_report.md"`.
 
-The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) generates 2 files. You can change the code it to output only 1 file, or more. The location and the name of output file is up to you.
+The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) generates 2 files. You can change the code it to output only 1 file, or more. You can change the location and the name of output file as you like.
 
 ### (3) custom reports?
 
-My `com.kazurayam.ks.testobject.TestObjectUsageReporter` class generates output in [Markdown](https://guides.github.com/features/mastering-markdown/) format, which is my favorite. You can develop your own reporter class and use it alternatively in the `Test Listener/AssociationDriver`. Read the soure [here](Keywords/com/kazurayam/ks/testobject/TestObjectUsageReporter.groovy). You would find everything you need to know to make your own reporter class.
+My `com.kazurayam.ks.testobject.TestObjectUsageReporter` class generates output in [Markdown](https://guides.github.com/features/mastering-markdown/) format, which is my favorite. If you want reports in other formats, you can develop your own reporter and use it in the Test Listener. You can read the soure of [TestObjectUsageReporter](Keywords/com/kazurayam/ks/testobject/TestObjectUsageReporter.groovy).
 
 # Conclusion
 
