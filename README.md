@@ -70,18 +70,20 @@ Also the tool can not recognized the following case as "used":
 
 ```
 // Style C
-class TestObjectFactory {
-    TestObject byXPath(String id, String xpath) {
+class TestObjectFactory {   // my custom Keyword
+    static TestObject byXPath(String id, String xpath) {
         TestObject o = new TestObject(id)
         o.addProperty("xpath", ConditionType.EQUALS, xpath)
         return o
     }
 }
 ...
-def tObj = TestObjectFactory.byyXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
+def tObj = TestObjectFactory.byXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
 ```
 
-The shortage matters for me. I prefer the Style C most, sometimes the Style B. I rarely take the Style A. Therefore the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) feature does not help. I need to help myself.
+In my projects, I prefer writing locators manually in the code as I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html) tool to write correct locators. So I take the Style C. My test cases call [`new TestObject(id)`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java) dynamically.
+
+But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) feature does not support the Style C. Therefore the tool does not help me. I need to help myself.
 
 # Solution
 
