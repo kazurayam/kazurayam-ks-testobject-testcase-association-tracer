@@ -62,6 +62,11 @@ public class TestObjectUsageReporter implements Reporter {
 			this.testSuiteContext = testSuiteContext
 		}
 
+		public Builder outputDir(String outputDir) {
+			Path dir = Paths.get(outputDir)
+			this.outputDir(dir)	
+		}
+		
 		public Builder outputDir(Path outputDir) {
 			this.outputDir = outputDir
 			return this
