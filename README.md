@@ -17,7 +17,6 @@ TestObject Usage Report
   - [How to install the plugin into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
   - [How to enable the report in your project](#how-to-enable-the-report-in-your-project)
   - [How the plugin is designed](#how-the-plugin-is-designed)
-  - [Cautions](#cautions)
 - [Appendiex](#appendiex)
   - [Table Of Contents](#table-of-contents)
 
