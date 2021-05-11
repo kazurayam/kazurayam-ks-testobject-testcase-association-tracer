@@ -190,17 +190,17 @@ public class TestObjectUsageReporter implements Reporter {
 			AssociationTracer tracer, ObjectRepositoryWrapper repos) {
 		sb.append("## ${TITLE_COUNT}\n\n")
 		/*
-		sb.append("This table shows the list of two types of TestObjects:\n"
-				+ "1. All Test Objects found in the `Object Repository`\n"
-				+ "2. `TestObject` instances created dynamically in Test Cases during this time of Test Suite run.\n"
-				+ "The table includes *Reference Count*."
-				+ " The Reference Count shows the number of Test Cases"
-				+ " which refered to each TestObjects by calling either of"
-				+ " `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)`"
-				+ " or"
-				+ " `new com.kms.katalon.core.testobject.TestObject(testObjectId)`."
-				+ "\n\n")
-		*/
+		 sb.append("This table shows the list of two types of TestObjects:\n"
+		 + "1. All Test Objects found in the `Object Repository`\n"
+		 + "2. `TestObject` instances created dynamically in Test Cases during this time of Test Suite run.\n"
+		 + "The table includes *Reference Count*."
+		 + " The Reference Count shows the number of Test Cases"
+		 + " which refered to each TestObjects by calling either of"
+		 + " `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)`"
+		 + " or"
+		 + " `new com.kms.katalon.core.testobject.TestObject(testObjectId)`."
+		 + "\n\n")
+		 */
 		sb.append("| # | Test Object ID | in Repos? | Reference Count |\n")
 		sb.append("| - | -------------- | --------- | --------------: |\n")
 		Set<String> testObjects = tracer.allCallees()
