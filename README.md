@@ -31,7 +31,7 @@ You can download the zip file, unzip it, open it with your local Katalon Studio.
 
 This project was developed using Katalon Studio ver7.9.1, but it should work on any version 7.0+.
 
-I developed this plug-in for my own sake. I suppose it would be useful other Katalon users.
+I developed this plug-in for my own sake. I hope it could be useful other Katalon users.
 
 # Background
 
@@ -42,9 +42,7 @@ Most of the built-in WebUI Keywords of Katalon Studio requires a parameter of ty
 - [`WebUI.getText`](https://docs.katalon.com/katalon-studio/docs/webui-get-text.html)
 - [`WebUI.verifyElementPresent`](https://docs.katalon.com/katalon-studio/docs/webui-verify-element-present.html)
 
-As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you find hundreds or even thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries is actually unused. We tend to find a lot of garges in the Object Repository.
-
-We want to keep our projects tidy. So Katalon Studio provides [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
+As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you find hundreds or even thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries is actually unused. We tend to find a lot of garges in the Object Repository. We want to keep our projects tidy. So Katalon Studio provides a feature: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
 
 # Problem to solve
 
@@ -52,7 +50,7 @@ As the [document](https://docs.katalon.com/katalon-studio/docs/test-objects-refa
 
 >A reference of Test Object is defined as invocations of findTestObject("test object ID"). If you create a new Test Object programmatically and don't use them with findTestObject, these Test Objects will be counted as "unused".
 
-Let me elaborate this description. The tool can recognize the following case as "used":
+Let me elaborate this description. The tool can recognize the following code in a Test Case script as "used":
 
 ```
 // Style A
@@ -72,16 +70,18 @@ Also the tool can not recognized the following case as "used":
 
 ```
 // Style C
-TestObject createTestObjectByXPath(String id, String xpath) {
-    TestObject o = new TestObject(id)
-    o.addProperty("xpath", ConditionType.EQUALS, xpath)
-    return o
+class TestObjectFactory {
+    TestObject byXPath(String id, String xpath) {
+        TestObject o = new TestObject(id)
+        o.addProperty("xpath", ConditionType.EQUALS, xpath)
+        return o
+    }
 }
 ...
-def tObj = new TestObject("a_Make Appointment", '//a[@id='btn-make-appointment']')
+def tObj = TestObjectFactory.byyXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
 ```
 
-The shortage matters for me. I prefer the Style B, sometimes the Style C, and rarely take the Style A. Therefore the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) does not help me much. So I need to help myself.
+The shortage matters for me. I prefer the Style C most, sometimes the Style B. I rarely take the Style A. Therefore the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) feature does not help. I need to help myself.
 
 # Solution
 
