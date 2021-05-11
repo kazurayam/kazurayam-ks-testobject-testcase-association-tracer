@@ -296,7 +296,7 @@ public class Associator {
 
 Let me dictate this code.
 
-The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Lister can get access to the information via the `accociator` variable.
+The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Listener can get access to the information via the `accociator` variable.
 
 
 ### (2) how the reports are compiled
