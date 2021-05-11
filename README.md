@@ -218,8 +218,6 @@ Here I assume you have already created a Katalon Studio project with running Tes
 
 ## How to let your project to compile the report
 
-Do you want to know the internal of the plug-in? OK, let me tell you about it.
-
 ### (1) create a Test Listener
 
 You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. The name can be any. Please copy and paste the following code:
@@ -238,6 +236,8 @@ Once your Test Suite finished, you will find a new folder `<projectDir>/build/re
 - [build/reports/testobject_usage_summary.md](docs/testobject_usage_summary.md)
 
 ## How the plugin is designed
+
+Do you want to know the internal of the plug-in? OK, let me tell you a bit about it.
 
 ### (1) Test Listener interfaces your tests and the plugin
 
