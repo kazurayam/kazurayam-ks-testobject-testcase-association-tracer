@@ -176,7 +176,7 @@ Therefore it is recommended that you create a special Test Suite for compiling a
 
 ### Test Case failures make the report unreliable
 
-The report will be unreliable when any Test Case failed and stopped. The statements after the failure will be skipped. My plugin will be ignorant of the skipped statements. In such a case the report becomes unreliable. You should fix all problems in Test Cases first. 
+The report will be unreliable when any Test Case failed and stopped. The statements after the failure will be skipped. The plug-in will be ignorant of the skipped statements. In such cases the report becomes unreliable. You should fix all problems in Test Cases first. 
 
 >I am sure you would be tempted to look at the failures first. Garbages in the Object Repository is low profile.
 
@@ -195,7 +195,7 @@ if (conditon) {
 }
 ```
 
-Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". The plug-in can't report that *both of "foo" and "bar" are used*.
+Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". The plug-in can't count that *both of "foo" and "bar" are used*.
 
 >The following code shows a possible workaround for this difficulty:
 
@@ -217,7 +217,9 @@ Here I assume you have already created a Katalon Studio project with running Tes
 2. place the jar in the `<projectDir>/Plugins` folder
 3. stop&restart Katalon Studio
 
-## How to let your project to report "Test Object Usage"
+## How to let your project to compile the report
+
+Do you want to know the internal of the plug-in? OK, let me tell you about it.
 
 ### (1) create a Test Listener
 
@@ -260,7 +262,12 @@ class AssociatorDriver {
     ...
 ```
 
-The `Associator` instance modifies the implementation of Katalon classes: [`com.kms.katalon.core.testobject.TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java) and [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java) using [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprogramming.html#metaprogramming_emc). The magic spell `modifyKatalonClasses` looks like this:
+The `Associator` instance dynamically modifies the implementation of following 2 Katalon classes using [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprogramming.html#metaprogramming_emc):
+
+- [`com.kms.katalon.core.testobject.TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java)
+- [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java) 
+
+The magic spell `modifyKatalonClasses` looks like this:
 
 ```
 package com.kazurayam.ks.testobject
@@ -288,7 +295,9 @@ public class Associator {
     ...
 ```
 
-The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). The `AssociationTracer`'s *static* instance exists in the Test Listener's scope. When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Lister can get access to the information via the `accociator` variable.
+Let me dictate this code.
+
+The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Lister can get access to the information via the `accociator` variable.
 
 
 ### (2) how the reports are compiled
