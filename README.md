@@ -91,10 +91,9 @@ I accept that the tool is designed for the common users as [this post](https://f
 
 I have developed a plugin named *kazurayam-ks-testobject-usage-report*. You will utilize its API in your *Test Listener*. When you execute a Test Suite, the plugin monitors the invocation of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plugin can recognize all of the Style A, B and C.
 
-When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Object was refered to by which Test Cases. The report includes the reference count of each Test Objects. The report includes "0-used Test Object in this time of Test Suite run". 
+When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Object was refered to by which Test Cases. The report includes the reference count of each Test Objects. It includes Test Objects which are used 0 time.
 
 A sample report is [here](docs/testobject_usage_full.md).
-
 
 
 # Description
@@ -126,6 +125,50 @@ A sample report is [here](docs/testobject_usage_full.md).
 | . | .. | .. | .. |
 | 14 | `Visit Date` | false | 1 |
 | . | .. | .. | .. |
+
+## CAUTION
+
+You need to be careful in reading the report by my plug-in.
+
+The plug-in does not scan the source codes of all Test Cases. Rather, the plug-in monitors the runtime behavior of Test Case A, B, C which are bundled in a specific Test Suite. So the report can only be correct about the Test Case A, B, C and it can not be correct about others. If you have more Test Case X, Y, Z which are not bundled in the Test Suite you checked, then the report can not count the references to Test Objects by Test Case X, Y, Z.
+
+Therefore it is recommended that you create a Test Suite **TS_runAllTestCases**. This would bundleds all of your Test Cases so that the my plugin can compile reports as comprehensive as possible.
+
+## WARNING
+
+### Test Case failures make the report unreliable
+
+The report will be unreliable when any Test Case failed and stopped during a Test Suite run. In that case, the statements after the failure will be skipped. My plugin will not be informed of the behavior of skipped statements. So the report would be unreliable. You should fix all problems in Test Cases first. 
+
+>I am sure you would be tempted to look at the failures first. Garbages in the Object Repository is low profile.
+
+### "if ... then ... else" makes the report unreliable
+
+The following Test Case is too difficult for my plugin:
+
+```
+TestObject tObj
+if (conditon) {
+  tObj = new TestObject("foo")
+  ...
+} else {
+  tObj = new TestObject("bar")
+  ...
+}
+```
+
+In one case, the "foo" TestObject will be seen used, and the "bar" unsed. In another case, the "foo" will be seen unused and the "bar" used. It depends on the "condition". My plugin is not intelligent enough to report that *both of foo and bar are used*.
+
+>A workaround for this difficulty for me would be:
+```
+TestObject foo = new TestObject("foo")
+TestObject bar = new TestObject("bar)
+if (conditon) {
+  // use foo 
+} else {
+  //use bar
+}
+```
 
 ## How to run the demo
 
