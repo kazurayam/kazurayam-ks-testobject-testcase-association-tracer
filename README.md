@@ -116,7 +116,7 @@ This report list the Test Case with reference count of 0.
 
 ### (2) Reference Count report
 
-This report list all of Test Objects prepared in the Object Repository (in Repos? is *true*) and the Test Objects dynamically instanciated by `"new TestObject(id)"` (in Repos? is *false*). The report shows the number of referer Test Cases of each Test Object.
+This report list all of Test Objects prepared in the Object Repository (in Repos? is *true*) and the Test Objects dynamically instanciated by `"new TestObject(id)"` (in Repos? is *false*). The report shows the number of Test Cases that refer to each Test Object.
 
 The "unused Test Object" will be included here.
 
@@ -190,7 +190,7 @@ if (conditon) {
 }
 ```
 
-In one case, the "foo" TestObject will be seen used, and the "bar" unsed. In another case, the "foo" will be seen unused and the "bar" used. It depends on the "condition". My plug-in is not intelligent enough to report that *both of foo and bar are used*.
+In one case, the "foo" TestObject will be seen used, and the "bar" unused. In another case, the "foo" will be seen unused and the "bar" used. These cases depend on the "condition". My plug-in is not intelligent enough to report that *both of "foo" and "bar" are used*.
 
 >A possible workaround for this difficulty for me would be:
 
@@ -206,7 +206,7 @@ if (conditon) {
 
 ## How to install the plugin into your Katalon Studio
 
-Here I assume you have already created a Katalon Studio project. 
+Here I assume you have already created a Katalon Studio project with running Test Cases and Test Suite. 
 
 1. download `kazurayam-ks-testobject-usage-report-x.x.x.jar` from the [Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page.
 2. place the jar in the `<projectDir>/Plugins` folder
@@ -214,44 +214,119 @@ Here I assume you have already created a Katalon Studio project.
 
 ## How to enable the report in your project
 
-### create a Test Listener
+### (1) create a Test Listener
 
-You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. You can copy and paste the following sample code: 
+You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. The name can be any. You can copy and paste the following sample code: 
 
 - [`Test Listeners/AssociationDriver`](Test%20Listeners/AssociatorDriver.groovy)
 
 No code change is required. It will run in any project.
 
-### run a Test Suite, then you will get it
+### (2) run a Test Suite, then you will get the reports
 
-Just choose one of your Test Suite and execute it.
+Just choose your Test Suite and execute it.
 
-You will find a new folder `<projectDir>/build/reports` is created and find 2 text files generated:
+Once your Test Suite finished, you will find a new folder `<projectDir>/build/reports` is created and find 2 text files generated:
 
 - [build/reports/testobject_usage_full.md](docs/testobject_usage_full.md)
 - [build/reports/testobject_usage_summary.md](docs/testobject_usage_summary.md)
 
 ## How the plugin is designed
 
-[`TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java)
+### (1) Test Listener interfaces your tests and the plugin
 
-Do you want to understand how the `kazurayam-ks-testobject-usage-report` plugin is designed?
+The [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) delegates the magical processing to an instance of `com.kazurayam.ks.testobject.Associator`.
 
-The entry point for you is to read the source code of 
+```
+class AssociatorDriver {
+	...
+  private Associator associator
+	...
+	AssociatorDriver() {
+		associator = new Associator()
+	}
 
-- [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy)
+	@BeforeTestSuite
+	def beforeTestSuite(TestSuiteContext testSuiteContext) {
+		associator.beforeTestSuite(testSuiteContext)
+	}
+  ...
+```
 
-Let's have a look at it.
+The `Associator` instance modifies the implementation of Katalon classes: [`com.kms.katalon.core.testobject.TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java) and [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java) using [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprogramming.html#metaprogramming_emc). The magic spell looks like this:
+
+```
+package com.kazurayam.ks.testobject
+...
+public class Associator {
+  ...
+  Boolean modifyKatalonClasses() {
+
+		AssociationTracer tracer = AssociationTracer.getInstance()
+    ...
+    ObjectRepository.metaClass.'static'.invokeMethod = { String methodName, args ->
+			if (methodName == "findTestObject") {
+				tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASE_ID], testObjectId)
+			}
+			return delegate.metaClass.getMetaMethod(methodName, args).invoke(delegate, args)
+		}
+		
+    TestObject.metaClass.constructor = { String testObjectId ->
+			tracer.trace(GlobalVariable[GLOBALVARIABLE_CURRENT_TESTCASE_ID],
+					testObjectId.replaceAll("Object Repository/", ''))
+			def constructor = TestObject.class.getConstructor(String.class)
+			return constructor.newInstance(testObjectId)
+		}
+		return true
+	}
+```
+
+The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). The `AssociationTracer` instance exists in the Test Listener's scope. When the `ObjectRepository.findTestObject(id)` method is called by your test case, the method notifies the `AssociationTracer`' of an association of *(TestCaseId, TestObjectId)* dynamically. When the `new TestObject(id)` method is invoked, it will do the same. At the end of a Test Suite run, the `AssocationTracer` instance (and indrectly `Associator` as well) will keeps all of the *(TestCaseId, TestObjectId)* that appeared.
 
 
+### (2) how the reports are compiled
 
+The `@AfterTestSuite`-annotated method of the Test Listener drives `TestObjectUsageReporter` class while passing the instance of fully-charged `Associator` and the Path information to save files into.
 
-# Appendiex
+```
+@AfterTestSuite
+	def afterTestSuite(TestSuiteContext testSuiteContext) {
+		Reporter summary = new TestObjectUsageReporter.Builder(associator, testSuiteContext)
+							// .composition(["UNUSED", "COUNT"])
+							.outputDir(outputDir)
+							.outputFilename('testobject_usage_summary.md')
+							.build()
+		summary.write()
+		
+		Reporter full = new TestObjectUsageReporter.Builder(associator, testSuiteContext)
+							.composition(["UNUSED", "COUNT", "REVERSE", "FORWARD"])
+							.outputDir(outputDir)
+							.outputFilename('testobject_usage_full.md')
+							.build()
+		full.write()
+		
+		WebUI.comment("TestObject Usage Report was written into ${outputDir.toAbsolutePath()}")
+	}
+```
 
-## Table Of Contents 
+One output from the `TestObjectUsageReporter` can be composed of 4 types of reports: "UNUSUED", "COUT", "REVERSE", "FORWARD". By **compositon(List[String])** method of `com.kazurayam.ks.testobject.TestObjectUsageReporter.Buidler` class, you can choose which type to output, and you can specify the order in a file. The method call is optional; will default to `.composition(["UNUSED", "COUNT"])`. The "REVERSE" and "FORWARD" report could be too length if you have hundreds of Test Objects in your project.
 
-You may have notices that I added a Table Of Contents in this README. 
-I used a GitHub Action named "toc-generator".
+By **outputDir(Path)** method, you can optionally specify the directory to save the output file. `outputDir(Path)` is optional; will default to `"./build/reports"`.
+
+By **outputFilename(String)** method, you can specify the name of the output file. It is optional; will default to `"testobject_usage_report.md"`.
+
+The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) generates 2 files. You can change the code it to output only 1 file, or more. The location and the name of output file is up to you.
+
+### (3) custom reports?
+
+My `com.kazurayam.ks.testobject.TestObjectUsageReporter` class generates output in [Markdown](https://guides.github.com/features/mastering-markdown/) format, which is my favorite. You can develop your own reporter class and use it alternatively in the `Test Listener/AssociationDriver`. Read the soure [here](Keywords/com/kazurayam/ks/testobject/TestObjectUsageReporter.groovy). You would find everything you need to know to make your own reporter class.
+
+# Conclusion
+
+I have developed my own solution as a downloadable jar. I hope it is useful for others as well.
+
+<!--
+You may have notices that I added a Table Of Contents in this README. I used a GitHub Action named "toc-generator".
 
 - https://dev.classmethod.jp/articles/auto-generate-toc-on-readme-by-actions/
-
+-->
