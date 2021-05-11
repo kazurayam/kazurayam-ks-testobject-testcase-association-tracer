@@ -42,7 +42,9 @@ Most of the built-in WebUI Keywords of Katalon Studio requires a parameter of ty
 - [`WebUI.getText`](https://docs.katalon.com/katalon-studio/docs/webui-get-text.html)
 - [`WebUI.verifyElementPresent`](https://docs.katalon.com/katalon-studio/docs/webui-verify-element-present.html)
 
-As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you find hundreds or even thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries is actually unused. We tend to find a lot of garges in the Object Repository. We want to keep our projects tidy. So Katalon Studio provides a feature: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
+As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you will find hundreds or thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries in the Object Repository will be unused garbages. A users shared his case in [this post](https://forum.katalon.com/t/performance-issue-for-show-unused-test-objects/51791/8)
+
+All of us want to keep our projects tidy. So Katalon Studio v7 added a built-in feature: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
 
 # Problem to solve
 
@@ -81,15 +83,17 @@ class TestObjectFactory {   // my custom Keyword
 def tObj = TestObjectFactory.byXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
 ```
 
-In my projects, I prefer writing locators manually in the code as I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html) tool to write correct locators. So I take the Style C. My test cases call [`new TestObject(id)`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java) dynamically.
+I personally prefer writing locators manually in the code as I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html) tool to write correct locators. So in most cases I take the Style C. But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) feature does not support the Style C. Therefore the tool does not help me.
 
-But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) feature does not support the Style C. Therefore the tool does not help me. I need to help myself.
+I accept that the tool is designed for the common users as [this post](https://forum.katalon.com/t/no-way-to-know-which-object-in-repository-is-being-used-in-scripts/51669/7) mentioned, and the Style C is not common. OK, I would help myself.
 
 # Solution
 
 I have developed a plugin named *kazurayam-ks-testobject-usage-report*. You will utilize its API in your *Test Listener*. When you execute a Test Suite, the plugin monitors the invocation of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plugin can recognize all of the Style A, B and C.
 
-When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Object was refered to by which Test Cases. The report includes the reference count of each Test Objects. The report includes "0-used Test Object in this time of Test Suite run". A sample is [here](docs/testobject_usage_full.md).
+When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Object was refered to by which Test Cases. The report includes the reference count of each Test Objects. The report includes "0-used Test Object in this time of Test Suite run". 
+
+A sample report is [here](docs/testobject_usage_full.md).
 
 
 
@@ -138,6 +142,8 @@ into your project. Just copy it. No code change for customization is required.
 
 
 ## How the plugin is designed
+
+[`TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java)
 
 Do you want to understand how the `kazurayam-ks-testobject-usage-report` plugin is designed?
 
