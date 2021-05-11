@@ -166,17 +166,17 @@ This report shows you a list of *from Test Case -> to Test Object* associations 
 
 ## CAUTION
 
-You need to be careful in reading the report by my plug-in.
+You need to be careful in reading the report by the plug-in.
 
-The plug-in does not scan the source codes of all Test Cases. Rather, the plug-in monitors the runtime behavior of Test Case A, B, C which are bundled in a specific Test Suite you executed. So the report can only be correct about the Test Case A, B, C. If you have more Test Case X, Y, Z which are not bundled in the Test Suite you checked, then the report can not count the references to Test Objects by Test Case X, Y, Z.
+The plug-in does not scan the source codes of all Test Cases. Rather, the plug-in monitors the runtime behavior of Test Case A, B, C which are bundled in a specific Test Suite you executed. So the report can only be correct about the Test Case A, B, C. If you have other Test Cases X, Y, Z (which are not bundled in the Test Suite), then the report can not count the references to Test Objects by Test Case X, Y, Z.
 
-Therefore it is recommended that you create a Test Suite. Any name it can be, e.g, **TS_runAllTestCases**. This should bundle all of your Test Cases so that the my plugin can compile reports as comprehensive as possible.
+Therefore it is recommended that you create a special Test Suite for compiling a "Test Object Usage Report". It's name can be any; e.g, **TS_runAllTestCases**. This should bundle all of your Test Cases so that the plugin can compile reports as comprehensive as possible.
 
 ## WARNING
 
 ### Test Case failures make the report unreliable
 
-The report will be unreliable when any Test Case failed and stopped during a Test Suite run. In that case, the statements after the failure will be skipped. My plugin will not be informed of the behavior of skipped statements. So the report would be unreliable. You should fix all problems in Test Cases first. 
+The report will be unreliable when any Test Case failed and stopped. The statements after the failure will be skipped. My plugin will be ignorant of the skipped statements. In such a case the report becomes unreliable. You should fix all problems in Test Cases first. 
 
 >I am sure you would be tempted to look at the failures first. Garbages in the Object Repository is low profile.
 
