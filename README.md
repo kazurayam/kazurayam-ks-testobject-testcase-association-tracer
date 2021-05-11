@@ -20,11 +20,13 @@ TestObject Usage Report
 	- ["if ... then ... else" makes the report unreliable](#if--then--else-makes-the-report-unreliable)
   - [How to install the plugin into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
   - [How to enable the report in your project](#how-to-enable-the-report-in-your-project)
-	- [create a Test Listener](#create-a-test-listener)
-	- [run a Test Suite, then you will get it](#run-a-test-suite-then-you-will-get-it)
+    - [(1) create a Test Listener](#1-create-a-test-listener)
+    - [(2) run a Test Suite, then you will get the reports](#2-run-a-test-suite-then-you-will-get-the-reports)
   - [How the plugin is designed](#how-the-plugin-is-designed)
-- [Appendiex](#appendiex)
-  - [Table Of Contents](#table-of-contents)
+    - [(1) Test Listener interfaces your tests and the plugin](#1-test-listener-interfaces-your-tests-and-the-plugin)
+    - [(2) how the reports are compiled](#2-how-the-reports-are-compiled)
+    - [(3) custom reports?](#3-custom-reports)
+- [Conclusion](#conclusion)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
