@@ -1,6 +1,9 @@
 TestObject Usage Report
 ====================
 
+- author: kazurayam
+- date: May 2021
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
@@ -48,9 +51,9 @@ Most of the built-in WebUI Keywords of Katalon Studio requires a parameter of ty
 - [`WebUI.getText`](https://docs.katalon.com/katalon-studio/docs/webui-get-text.html)
 - [`WebUI.verifyElementPresent`](https://docs.katalon.com/katalon-studio/docs/webui-verify-element-present.html)
 
-As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you will find hundreds or thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries in the Object Repository will be unused garbages. Once a users shared his case in [this post](https://forum.katalon.com/t/performance-issue-for-show-unused-test-objects/51791/8)
+As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you will find hundreds or thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries in the Object Repository will be occupied by unused garbages. Once a users shared his case in [this post](https://forum.katalon.com/t/performance-issue-for-show-unused-test-objects/51791/8)
 
-All users want to keep their projects tidy. To help us, Katalon Studio v7 added a tool: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
+All users want to keep their projects tidy. To help us, Katalon Studio v7 introduced a tool: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
 
 # Problem to solve
 
@@ -89,15 +92,15 @@ class TestObjectFactory {   // my custom Keyword
 def tObj = TestObjectFactory.byXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
 ```
 
-I personally prefer writing locators (XPath, CSS Selectors) manually in the code; I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html) feature to write correct locators. So usually I take the Style C. But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) tool does not support the Style C. Therefore the tool is not useful for me.
+I personally prefer writing locators (XPath, CSS Selectors) manually in the code; I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html)  to write correct locators. So usually I take the Style C. But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) tool does not support the Style C. Therefore the tool is not useful for me.
 
-I accept that, as [this post](https://forum.katalon.com/t/no-way-to-know-which-object-in-repository-is-being-used-in-scripts/51669/7) mentioned, the tool is designed for the common users. I see that the Style C is not common. OK, I would help myself.
+I accept that, as [this post](https://forum.katalon.com/t/no-way-to-know-which-object-in-repository-is-being-used-in-scripts/51669/7) mentioned, the tool is designed for the common users. I see that the Style C is not common. OK, I would develop a solution myself.
 
 # Solution
 
-I have developed a plugin named *kazurayam-ks-testobject-usage-report*. You will utilize its API in your *Test Listener*. When you execute a Test Suite, the plugin monitors the invocation of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plugin can recognize all of the Style A, B and C.
+I have developed a plugin named *kazurayam-ks-testobject-usage-report*. You will utilize its API in your *Test Listener*. When you execute a Test Suite, the plugin monitors invocations of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plugin can recognize all of the Style A, B and C.
 
-When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Object was refered to by which Test Cases. The report includes the reference count of each Test Objects. It includes Test Objects which are used 0 time.
+When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Objects were refered to by which Test Cases. The report includes the reference count of each Test Objects. It includes a list of unused Test Objects.
 
 # Description
 
@@ -134,7 +137,7 @@ The "unused Test Object" will be included here.
 
 ### (3) Reverse Lookup Detail report
 
-The report enumerates the IDs of referer Test Cases of each Test Object.
+The report list all used Test Objects with list of Test Cases that refered each Test Objects. The list is sorted by Test Object IDs.
 
 > The unused Test Objects will not appear here.
 
@@ -148,7 +151,7 @@ The report enumerates the IDs of referer Test Cases of each Test Object.
 
 ### (4) Forward Lookup Detail report
 
-This report shows you which Test Objects were refered to by a Test Case. The report includes all Test Cases bundled in the Test Suite you executed.
+This report shows you a list of *from Test Case -> to Test Object* associations sorted by the Test Case IDs.
 
 > The unused Test Objects will not appear here.
 
