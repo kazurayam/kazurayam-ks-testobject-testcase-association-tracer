@@ -330,7 +330,7 @@ By **outputDir(Path)** method, you can optionally specify the directory to save 
 
 By **outputFilename(String)** method, you can specify the name of the output file. It is optional; will default to `"testobject_usage_report.md"`.
 
-The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) generates 2 files. You can change the code it to output only 1 file, or more. You can change the location and the name of output file as you like.
+The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) generates 2 files. You can change the code to emit as many files as you want.
 
 ### (3) custom reports?
 
