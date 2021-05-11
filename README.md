@@ -33,12 +33,11 @@ TestObject Usage Report
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-This project is a [Katalon Studio](https://www.katalon.com/katalon-studio/) where I have developed a plug-in module named
-*kazurayam-ks-testobject-usage-report*. 
+This is a [Katalon Studio](https://www.katalon.com/katalon-studio/) project where I develop a plug-in module named
+*kazurayam-ks-testobject-usage-report*.
 
-This project is zipped and distributed at the 
-[Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page.
-You can download the zip file, unzip it, open it with your local Katalon Studio.
+You can download the zip file from at the 
+[Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page, unzip it, open it with your local Katalon Studio.
 
 This project was developed using Katalon Studio ver7.9.1 Free vesion, but it should work on any version 7.0+.
 
