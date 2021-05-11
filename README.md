@@ -22,7 +22,7 @@ TestObject Usage Report
     - [Test Case failures make the report unreliable](#test-case-failures-make-the-report-unreliable)
     - ["if ... then ... else" statement makes the report unreliable](#if--then--else-statement-makes-the-report-unreliable)
   - [How to install the plugin into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
-  - [How to let your project to report "Test Object Usage"](#how-to-let-your-project-to-report-test-object-usage)
+  - [How to let your project to compile the report](#how-to-let-your-project-to-compile-the-report)
     - [(1) create a Test Listener](#1-create-a-test-listener)
     - [(2) run a Test Suite, then you will get the reports](#2-run-a-test-suite-then-you-will-get-the-reports)
   - [How the plugin is designed](#how-the-plugin-is-designed)
