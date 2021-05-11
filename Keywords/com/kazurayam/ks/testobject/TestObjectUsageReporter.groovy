@@ -117,6 +117,7 @@ public class TestObjectUsageReporter implements Reporter {
 		sb.append("- Test Suite: ${GlobalVariable[Associator.GLOBALVARIABLE_CURRENT_TESTSUITE_ID]}\n")
 		sb.append("- started at: ${GlobalVariable[Associator.GLOBALVARIABLE_CURRENT_TESTSUITE_TIMESTAMP]}\n")
 		sb.append("\n")
+		sb.append("**WARNING**: The information here depends on when and which Test Suite you executed.\n\n")
 		//
 		composition.forEach({ request ->
 			switch (request) {
@@ -161,7 +162,6 @@ public class TestObjectUsageReporter implements Reporter {
 		sb.append("## ${TITLE_UNUSED}\n\n")
 		sb.append("This table shows the list of Test Objects in the Object Repository"
 				+ " which were not used during this time of Test Suite run.\n\n")
-		sb.append("**WARNING**: The information here depends on when and which Test Suite you executed.\n\n")
 		sb.append("| # | Test Object ID | in Repos? | reference count |\n")
 		sb.append("| - | -------------- | --------- | --------------: |\n")
 		Set<String> testObjects = tracer.allCallees()
@@ -189,17 +189,18 @@ public class TestObjectUsageReporter implements Reporter {
 	private void compileTestObjectReferenceCount(StringBuilder sb,
 			AssociationTracer tracer, ObjectRepositoryWrapper repos) {
 		sb.append("## ${TITLE_COUNT}\n\n")
-		sb.append("This table shows the list of two types of TestObjects:\n" 
+		/*
+		sb.append("This table shows the list of two types of TestObjects:\n"
 				+ "1. All Test Objects found in the `Object Repository`\n"
 				+ "2. `TestObject` instances created dynamically in Test Cases during this time of Test Suite run.\n"
 				+ "The table includes *Reference Count*."
-				+ " The Reference Count shows the number of Test Cases" 
-				+ " which refered to each TestObjects by calling either of" 
-				+ " `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)`" 
-				+ " or" 
+				+ " The Reference Count shows the number of Test Cases"
+				+ " which refered to each TestObjects by calling either of"
+				+ " `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)`"
+				+ " or"
 				+ " `new com.kms.katalon.core.testobject.TestObject(testObjectId)`."
 				+ "\n\n")
-		sb.append("**WARNING**: The information here depends on when and which Test Suite you executed.\n\n")
+		*/
 		sb.append("| # | Test Object ID | in Repos? | Reference Count |\n")
 		sb.append("| - | -------------- | --------- | --------------: |\n")
 		Set<String> testObjects = tracer.allCallees()
@@ -223,7 +224,6 @@ public class TestObjectUsageReporter implements Reporter {
 	private void compileReverseLookupDetail(StringBuilder sb,
 			AssociationTracer tracer, ObjectRepositoryWrapper repos) {
 		sb.append("## ${TITLE_REVERSE}\n\n")
-		sb.append("**WARNING**: The information here depends on when and which Test Suite you executed.\n\n")
 		sb.append("| # | Test Object ID | in Repos? | used by Test Case |\n")
 		sb.append("| - | -------------- | --------- | ----------------- |\n")
 		List<String> testObjects = new ArrayList<String>(tracer.allCallees()).toSorted()
@@ -247,7 +247,6 @@ public class TestObjectUsageReporter implements Reporter {
 	private void compileForwardReferenceDetail(StringBuilder sb,
 			AssociationTracer tracer, ObjectRepositoryWrapper repos) {
 		sb.append("## ${TITLE_FORWARD}\n\n")
-		sb.append("**WARNING**: The information here depends on when and which Test Suite you executed.\n\n")
 		sb.append("| # | Test Case refers | Test Object | in Repos? |\n")
 		sb.append("| - | ---------------- | ----------- | --------- |\n")
 		List<String> testCases = new ArrayList<String>(tracer.allCallers()).toSorted()

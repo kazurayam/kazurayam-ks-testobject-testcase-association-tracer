@@ -11,3 +11,5 @@ Reports/
 
 build/
 target/
+.cache
+settings/

@@ -1,13 +1,13 @@
 # Test Object Usage Report
 
 - Test Suite: Test Suites/main/TS_CURA
-- started at: 2021-05-10T16:31:02
+- started at: 2021-05-11T18:51:54
 
-**Be careful !**: The reference count reported here depends on which Test Suite you executed and how it ran (PASSED or FAILED). It is highly likely that another Test Suite will emit different values. 
+**WARNING**: The information here depends on when and which Test Suite you executed.
 
 ## Unused Test Object List
 
-This table shows the list of Test Objects prepared in the Object Repository and were not used during this time of Test Suite run.
+This table shows the list of Test Objects in the Object Repository which were not used during this time of Test Suite run.
 
 | # | Test Object ID | in Repos? | reference count |
 | - | -------------- | --------- | --------------: |
@@ -15,11 +15,6 @@ This table shows the list of Test Objects prepared in the Object Repository and 
 
 
 ## Test Object Reference Count
-
-This table shows the list of two types of TestObjects:
-1. All Test Objects found in the `Object Repository`
-2. `TestObject` instances created dynamically in Test Cases during this time of Test Suite run.
-The table includes *Reference Count*. The Reference Count shows the number of Test Cases which refered to each TestObjects by calling either of `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)` or `new com.kms.katalon.core.testobject.TestObject(testObjectId)`.
 
 | # | Test Object ID | in Repos? | Reference Count |
 | - | -------------- | --------- | --------------: |
@@ -70,8 +65,6 @@ The table includes *Reference Count*. The Reference Count shows the number of Te
 
 
 ## Forward Reference Detail
-
-**WARNING**: The information here depends on when and which Test Suite you executed.
 
 | # | Test Case refers | Test Object | in Repos? |
 | - | ---------------- | ----------- | --------- |
