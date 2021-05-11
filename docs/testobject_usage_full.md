@@ -1,10 +1,27 @@
-# TestObject Usage Report
+# Test Object Usage Report
 
-- TestSuite: Test Suites/main/TS_CURA
+- Test Suite: Test Suites/main/TS_CURA
+- started at: 2021-05-10T16:31:02
+
+**Be careful !**: The reference count reported here depends on which Test Suite you executed and how it ran (PASSED or FAILED). It is highly likely that another Test Suite will emit different values. 
+
+## Unused Test Object List
+
+This table shows the list of Test Objects prepared in the Object Repository and were not used during this time of Test Suite run.
+
+| # | Test Object ID | in Repos? | reference count |
+| - | -------------- | --------- | --------------: |
+| 12 | `Page_CURA Healthcare Service/td_20` | true | 0 |
+
 
 ## Test Object Reference Count
 
-| # | Test Object ID | in Repos? | reference count |
+This table shows the list of two types of TestObjects:
+1. All Test Objects found in the `Object Repository`
+2. `TestObject` instances created dynamically in Test Cases during this time of Test Suite run.
+The table includes *Reference Count*. The Reference Count shows the number of Test Cases which refered to each TestObjects by calling either of `com.kms.katalon.core.testobject.ObjectRepository.findTestObject(testObjectId)` or `new com.kms.katalon.core.testobject.TestObject(testObjectId)`.
+
+| # | Test Object ID | in Repos? | Reference Count |
 | - | -------------- | --------- | --------------: |
 | 1 | `(.//*[normalize-space(text()) and normalize-space(.)='Sa'])[1]/following::td[20]` | false | 1 |
 | 2 | `Page_CURA Healthcare Service/a_Go to Homepage` | true | 2 |
@@ -54,6 +71,8 @@
 
 ## Forward Reference Detail
 
+**WARNING**: The information here depends on when and which Test Suite you executed.
+
 | # | Test Case refers | Test Object | in Repos? |
 | - | ---------------- | ----------- | --------- |
 | 1 | `Test Cases/main/TC_CURA` | `(.//*[normalize-space(text()) and normalize-space(.)='Sa'])[1]/following::td[20]` | false |
@@ -80,3 +99,5 @@
 | 2 | `Test Cases/main/TC_CURA - more` | `Page_CURA Healthcare Service/select_Tokyo CURA Healthcare Center        _5b4107` | true |
 | 2 | `Test Cases/main/TC_CURA - more` | `Page_CURA Healthcare Service/textarea_Comment_comment` | true |
 | 2 | `Test Cases/main/TC_CURA - more` | `Visit Date` | false |
+
+
