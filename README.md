@@ -36,7 +36,7 @@ TestObject Usage Report
 This is a [Katalon Studio](https://www.katalon.com/katalon-studio/) project where I develop a plug-in module named
 *kazurayam-ks-testobject-usage-report*.
 
-You can download the zip file from at the 
+You can download the zip file from at the
 [Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page, unzip it, open it with your local Katalon Studio.
 
 This project was developed with Katalon Studio ver7.9.1 Free vesion, but it should work on any version 7.0+.
@@ -173,7 +173,7 @@ Therefore I would recommend you to create a special Test Suite for compiling "Te
 
 ## WARNING
 
-### Test Case failures make a report unreliable 
+### Test Case failures make a report unreliable
 
 "Test Object Usage Report" will be unreliable when one or more Test Cases failed and stopped. The statements after a failure will be skipped. The plug-in will become ignorant of the skipped statements; then the report becomes unreliable. You should fix all failures in Test Cases first.
 
@@ -222,7 +222,7 @@ Here I assume you have already created a Katalon Studio project with running Tes
 
 You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/docs/fixtures-listeners.html) in your project. The name can be any. Please copy and paste the following code:
 
-- [`Test Listeners/AssociationDriver`](Test%20Listeners/AssociatorDriver.groovy)
+- [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy)
 
 No code change is required. It will run in any project.
 
@@ -269,7 +269,7 @@ class AssociatorDriver {
 The `Associator` instance dynamically modifies the implementation of following 2 Katalon classes:
 
 - [`com.kms.katalon.core.testobject.TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java)
-- [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java) 
+- [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java)
 
 Magic spell `modifyKatalonClasses()` looks like this:
 
@@ -304,8 +304,8 @@ I employed [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprog
 Let me dictate this code:
 
 - When a test case invokes `ObjectRepository.findTestObject(id)` method, then the *modified version* of `findTestObject` method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association.
-- The `AssociationTracer` records everything notified. 
-- An invokation of `new TestObject(id)` method will do the same: notifies the `AssociationTracer` of the *(TestCaseId, TestObjectId)* association. 
+- The `AssociationTracer` records everything notified.
+- An invokation of `new TestObject(id)` method will do the same: notifies the `AssociationTracer` of the *(TestCaseId, TestObjectId)* association.
 - Eventually the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run.
 
 The `Test Listeners/AssociatorDriver` can get access to the information recorded by `AssociationTracer` via the `accociator` variable for compiling reports finally.

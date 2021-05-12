@@ -64,9 +64,9 @@ public class TestObjectUsageReporter implements Reporter {
 
 		public Builder outputDir(String outputDir) {
 			Path dir = Paths.get(outputDir)
-			this.outputDir(dir)	
+			this.outputDir(dir)
 		}
-		
+
 		public Builder outputDir(Path outputDir) {
 			this.outputDir = outputDir
 			return this
