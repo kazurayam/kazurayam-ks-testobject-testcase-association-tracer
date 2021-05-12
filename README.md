@@ -258,6 +258,11 @@ class AssociatorDriver {
     def beforeTestSuite(TestSuiteContext testSuiteContext) {
         associator.beforeTestSuite(testSuiteContext)
     }
+
+    @BeforeTestCase
+    def beforeTestCase(TestCaseContext testCaseContext) {
+        associator.beforeTestCase(testCaseContext)
+    }
     ...
 ```
 
