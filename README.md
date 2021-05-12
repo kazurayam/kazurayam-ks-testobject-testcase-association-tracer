@@ -21,7 +21,7 @@ TestObject Usage Report
   - [WARNING](#warning)
     - [Test Case failures make the report unreliable](#test-case-failures-make-the-report-unreliable)
     - ["if ... then ... else" statement makes the report unreliable](#if--then--else-statement-makes-the-report-unreliable)
-  - [How to install the plugin into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
+  - [How to install the plug-in into your Katalon Studio](#how-to-install-the-plugin-into-your-katalon-studio)
   - [How to let your project to compile the report](#how-to-let-your-project-to-compile-the-report)
     - [(1) create a Test Listener](#1-create-a-test-listener)
     - [(2) run a Test Suite, then you will get the reports](#2-run-a-test-suite-then-you-will-get-the-reports)
@@ -39,7 +39,7 @@ This is a [Katalon Studio](https://www.katalon.com/katalon-studio/) project wher
 You can download the zip file from at the 
 [Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page, unzip it, open it with your local Katalon Studio.
 
-This project was developed using Katalon Studio ver7.9.1 Free vesion, but it should work on any version 7.0+.
+This project was developed with Katalon Studio ver7.9.1 Free vesion, but it should work on any version 7.0+.
 
 # Background
 
@@ -50,9 +50,9 @@ Most of the built-in WebUI Keywords of Katalon Studio requires a parameter of ty
 - [`WebUI.getText`](https://docs.katalon.com/katalon-studio/docs/webui-get-text.html)
 - [`WebUI.verifyElementPresent`](https://docs.katalon.com/katalon-studio/docs/webui-verify-element-present.html)
 
-As your Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you will find hundreds or thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries in the Object Repository will be occupied by unused garbages. Once a users shared his case in [this post](https://forum.katalon.com/t/performance-issue-for-show-unused-test-objects/51791/8)
+As a Katalon project grows, the number of Test Objects increases. Especially when you use [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html), it generates a lot of Test Objects automatically. In the end you will find hundreds or thousands of entries in the `Object Repository` folder. Here arises a problem. A significant portion of the entries in the Object Repository will be occupied by unused garbages. A user shared his case in [this post](https://forum.katalon.com/t/performance-issue-for-show-unused-test-objects/51791/8).
 
-All users want to keep their projects tidy. To help us, Katalon Studio v7 introduced a tool: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html). By **Tools > Test Object > Show unused Test Objects**, we can find unused entries in the "Object Repository".
+Katalon Studio v7 introduced a tool: [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) to help users who want to keep their projects tidy. We can find unused entries in the "Object Repository" by **Tools > Test Object > Show unused Test Objects**.
 
 # Problem to solve
 
@@ -91,21 +91,21 @@ class TestObjectFactory {   // my custom Keyword
 def tObj = TestObjectFactory.byXPath("a_Make Appointment", '//a[@id='btn-make-appointment']')
 ```
 
-I personally prefer writing locators (XPath, CSS Selectors) manually in the code; I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html)  to write correct locators. So usually I take the Style C. But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) tool does not support the Style C. Therefore the tool is not useful for me.
+I usually take the Style C because I prefer writing locators (XPath, CSS Selectors) manually in the code; I do not need the [Record Web Utility](https://docs.katalon.com/katalon-studio/docs/record-web-utility.html) to write correct locators. But the [Test Objects Refactoring](https://docs.katalon.com/katalon-studio/docs/test-objects-refactoring.html) tool does not support the Style C. So the tool is not useful for me. [This post](https://forum.katalon.com/t/no-way-to-know-which-object-in-repository-is-being-used-in-scripts/51669/7) mentioned that the tool is designed for the common users. I would accept that. I agree that the Style C is not common.
 
-I accept that, as [this post](https://forum.katalon.com/t/no-way-to-know-which-object-in-repository-is-being-used-in-scripts/51669/7) mentioned, the tool is designed for the common users. I see that the Style C is not common. OK, I would develop a solution myself.
+OK, I would develop a solution myself.
 
 # Solution
 
-I have developed a plugin named *kazurayam-ks-testobject-usage-report*. You will utilize its API in your *Test Listener*. When you execute a Test Suite, the plugin monitors invocations of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plugin can recognize all of the Style A, B and C.
+I have developed a plug-in named *kazurayam-ks-testobject-usage-report*. You can use it in a *Test Listener*. When you execute a Test Suite, the plug-in monitors invocations of `findTestObject(...)` and `new TestObject(...)` by the Test Cases in the Test Suite. The plug-in can recognize all of the Style A, B and C.
 
-When the Test Suite finishes, the plugin compiles some text files in Markdown format where you can find information which Test Objects were refered to by which Test Cases. The report includes the reference count of each Test Objects. It includes a list of unused Test Objects.
+When the Test Suite finishes, the plug-in compiles some text files in Markdown format where you can find information which Test Objects were refered to by which Test Cases. The report includes the reference count of each Test Objects. It shows you a list of unused Test Objects.
 
 # Description
 
 ## Sample report
 
-A sample report is availabe:
+A sample report is available:
 
 - [testobject_usage_full.md](docs/testobject_usage_full.md).
 
@@ -122,7 +122,7 @@ This report list the Test Case with reference count of 0.
 
 This report list all of Test Objects prepared in the Object Repository (in Repos? is *true*) and the Test Objects dynamically instanciated by `"new TestObject(id)"` (in Repos? is *false*). The report shows the number of Test Cases that refer to each Test Object.
 
-The "unused Test Object" will be included here.
+Test Objects with 0 reference count ("unused") will be included in this list.
 
 | # | Test Object ID | in Repos? | reference count |
 | - | -------------- | --------- | --------------: |
@@ -136,7 +136,7 @@ The "unused Test Object" will be included here.
 
 ### (3) Reverse Lookup Detail report
 
-The report list all used Test Objects with list of Test Cases that refered each Test Objects. The list is sorted by Test Object IDs.
+The report shows a list of all used Test Objects, associated with list of Test Cases that refered each Test Objects. It is sorted by Test Object IDs.
 
 > The unused Test Objects will not appear here.
 
@@ -150,9 +150,9 @@ The report list all used Test Objects with list of Test Cases that refered each 
 
 ### (4) Forward Lookup Detail report
 
-This report shows you a list of *from Test Case -> to Test Object* associations sorted by the Test Case IDs.
+This report shows a list of *(from Test Case -> to Test Object)* associations sorted by the Test Case IDs.
 
-> The unused Test Objects will not appear here.
+>The unused Test Objects will not appear here.
 
 | # | Test Case refers | Test Object | in Repos? |
 | - | ---------------- | ----------- | --------- |
@@ -165,21 +165,21 @@ This report shows you a list of *from Test Case -> to Test Object* associations 
 
 ## CAUTION
 
-You need to be careful in reading the report by the plug-in.
+You need to be careful in reading the reports.
 
-The plug-in does not scan the source codes of all Test Cases. Rather, the plug-in monitors the runtime behavior of Test Case A, B, C which are bundled in a specific Test Suite you executed. So the report can only be correct about the Test Case A, B, C. If you have other Test Cases X, Y, Z (which are not bundled in the Test Suite), then the report can not count the references to Test Objects by Test Case X, Y, Z.
+The plug-in does not literally scan the source codes of Test Case. Rather, the plug-in monitors the runtime behavior of Test Case-A,B,C which are bundled in a specific Test Suite you executed. So the report can only be correct about the Test Case-A,B,C. If you have other Test Cases-X,Y,Z that are not bundled in the Test Suite, the report can't count the references to Test Objects by Test Case-X,Y,Z.
 
-Therefore it is recommended that you create a special Test Suite for compiling a "Test Object Usage Report". It's name can be any; e.g, **TS_runAllTestCases**. This should bundle all of your Test Cases so that the plugin can compile reports as comprehensive as possible.
+Therefore I would recommend you to create a special Test Suite for compiling "Test Object Usage Report". It's name can be any; e.g, **TS_runAllTestCases**. This Test Suite should bundle all of Test Cases so that the plug-in can compile reports as comprehensive as possible.
 
 ## WARNING
 
-### Test Case failures make the report unreliable
+### Test Case failures make a report unreliable 
 
-The report will be unreliable when any Test Case failed and stopped. The statements after the failure will be skipped. The plug-in will be ignorant of the skipped statements. In such cases the report becomes unreliable. You should fix all problems in Test Cases first. 
+"Test Object Usage Report" will be unreliable when one or more Test Cases failed and stopped. The statements after a failure will be skipped. The plug-in will become ignorant of the skipped statements; then the report becomes unreliable. You should fix all failures in Test Cases first.
 
->I am sure you would be tempted to look at the failures first. Garbages in the Object Repository is low profile.
+>I am sure you would look at the failures first, as garbages in the Object Repository is low profile.
 
-### "if ... then ... else" statement makes the report unreliable
+### "if ... then ... else" statement makes a report unreliable
 
 The following Test Case is too difficult for the plug-in:
 
@@ -194,7 +194,7 @@ if (conditon) {
 }
 ```
 
-Sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". The plug-in can't count that *both of "foo" and "bar" are used*.
+When this code rans, sometimes the "foo" TestObject will be seen used and the "bar" unused. At other times the "foo" will be seen unused and the "bar" used. It depends on the "condition". The plug-in can't count that *both of "foo" and "bar" are used*.
 
 >The following code shows a possible workaround for this difficulty:
 
@@ -208,15 +208,15 @@ if (conditon) {
 }
 ```
 
-## How to install the plugin into your Katalon Studio
+## How to install the plug-in into your Katalon Studio
 
-Here I assume you have already created a Katalon Studio project with running Test Cases and Test Suite.
+Here I assume you have already created a Katalon Studio project with running Test Cases and a Test Suite.
 
 1. download `kazurayam-ks-testobject-usage-report-x.x.x.jar` from the [Releases](https://github.com/kazurayam/kazurayam-ks-testobject-usage-report/releases) page.
 2. place the jar in the `<projectDir>/Plugins` folder
-3. stop&restart Katalon Studio
+3. stop and restart Katalon Studio
 
-## How to let your project to compile the report
+## How to let your project to compile a report
 
 ### (1) create a Test Listener
 
@@ -226,20 +226,20 @@ You need to create a [Test Listener](https://docs.katalon.com/katalon-studio/doc
 
 No code change is required. It will run in any project.
 
-### (2) run a Test Suite, then you will get the reports
+### (2) run a Test Suite, then you will get a reports
 
-Just choose your Test Suite and execute it.
+Just choose a Test Suite and execute it.
 
-Once your Test Suite finished, you will find a new folder `<projectDir>/build/reports` is created and find 2 text files generated:
+Once the Test Suite finished, you will find a new folder `<projectDir>/build/reports` is created and find 2 text files generated:
 
 - [build/reports/testobject_usage_full.md](docs/testobject_usage_full.md)
 - [build/reports/testobject_usage_summary.md](docs/testobject_usage_summary.md)
 
-## How the plugin is designed
+## How the plug-in is designed
 
 Do you want to know the internal of the plug-in? OK, let me tell you a bit about it.
 
-### (1) Test Listener interfaces your tests and the plugin
+### (1) Test Listener interfaces tests with plug-in
 
 The [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver.groovy) delegates the magical processing to an instance of `com.kazurayam.ks.testobject.Associator`.
 
@@ -261,12 +261,12 @@ class AssociatorDriver {
     ...
 ```
 
-The `Associator` instance dynamically modifies the implementation of following 2 Katalon classes using [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprogramming.html#metaprogramming_emc):
+The `Associator` instance dynamically modifies the implementation of following 2 Katalon classes:
 
 - [`com.kms.katalon.core.testobject.TestObject`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/TestObject.java)
 - [`com.kms.katalon.core.testobject.ObjectRepository`](https://github.com/katalon-studio/katalon-studio-testing-framework/blob/master/Include/scripts/groovy/com/kms/katalon/core/testobject/ObjectRepository.java) 
 
-The magic spell `modifyKatalonClasses` looks like this:
+Magic spell `modifyKatalonClasses()` looks like this:
 
 ```
 package com.kazurayam.ks.testobject
@@ -294,14 +294,20 @@ public class Associator {
     ...
 ```
 
-Let me dictate this code.
+I employed [Groovy's Metaprogramming technique](https://groovy-lang.org/metaprogramming.html#metaprogramming_emc) here.
 
-The `Associator` class uses `AssociationTracer` class which employs the Design Pattern ["Singleton"](https://www.baeldung.com/java-singleton). When a test case invokes `ObjectRepository.findTestObject(id)` method, then the method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association. An invokation of `new TestObject(id)` method will do the same. At `@AfterTestSuite`, the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run. The Test Listener can get access to the information via the `accociator` variable.
+Let me dictate this code:
 
+- When a test case invokes `ObjectRepository.findTestObject(id)` method, then the *modified version* of `findTestObject` method notifies the `AssociationTracer` instance of *(TestCaseId, TestObjectId)* association.
+- The `AssociationTracer` records everything notified. 
+- An invokation of `new TestObject(id)` method will do the same: notifies the `AssociationTracer` of the *(TestCaseId, TestObjectId)* association. 
+- Eventually the `AssocationTracer` instance will know all of the *(TestCaseId, TestObjectId)* associations that appeared during a Test Suite run.
+
+The `Test Listeners/AssociatorDriver` can get access to the information recorded by `AssociationTracer` via the `accociator` variable for compiling reports finally.
 
 ### (2) how the reports are compiled
 
-The `@AfterTestSuite`-annotated method of the Test Listener drives `TestObjectUsageReporter` class while passing the instance of fully-charged `Associator` and the Path information to save files into.
+`@AfterTestSuite`-annotated method of the `Test Listeners/AssociatorDriver` calls `TestObjectUsageReporter` object to compile reports. An instance of fully-charged `Associator` and the Path information to save files into will be passed as parameters.
 
 ```
 @AfterTestSuite
@@ -324,7 +330,11 @@ The `@AfterTestSuite`-annotated method of the Test Listener drives `TestObjectUs
     }
 ```
 
-A single file output from the `TestObjectUsageReporter` can be composed of 4 types of reports: "UNUSUED", "COUNT", "REVERSE" and "FORWARD". By **compositon(List[String])** method of `com.kazurayam.ks.testobject.TestObjectUsageReporter.Buidler` class, you can choose which type to output, and you can specify the order in a file. The method call is optional; will default to `.composition(["UNUSED", "COUNT"])`. The "REVERSE" and "FORWARD" report could be long if you have many Test Cases x many Test Objects in your project.
+An output file from the `TestObjectUsageReporter` can be composed of 4 types of reports: "UNUSUED", "COUNT", "REVERSE" and "FORWARD". The method call is optional; will default to `.composition(["UNUSED", "COUNT"])`.
+
+By **compositon(List[String])** method of `com.kazurayam.ks.testobject.TestObjectUsageReporter.Buidler` class, you can specify which type to print, how these should be ordered. For example, `.composition(["COUNT","REVERSE")` and `.composition(["REVERSE","COUNT")` will compile the same set of component reports but in opposit order.
+
+>Beware that the "REVERSE" and "FORWARD" report could be very long if you have many Test Cases + Test Objects.
 
 By **outputDir(Path)** method, you can optionally specify the directory to save the output files. `outputDir(Path)` is optional; will default to `"./build/reports"`.
 
@@ -334,7 +344,7 @@ The sample [`Test Listeners/AssociatorDriver`](Test%20Listeners/AssociatorDriver
 
 ### (3) custom reports?
 
-My `com.kazurayam.ks.testobject.TestObjectUsageReporter` class generates output in [Markdown](https://guides.github.com/features/mastering-markdown/) format, which is my favorite. If you want reports in other formats, you can develop your own reporter and use it in the Test Listener. You can read the soure of [TestObjectUsageReporter](Keywords/com/kazurayam/ks/testobject/TestObjectUsageReporter.groovy).
+`com.kazurayam.ks.testobject.TestObjectUsageReporter` class generates output in [Markdown](https://guides.github.com/features/mastering-markdown/) format. You can develop your custom reporter and use it in the Test Listener. Please read the soure of [TestObjectUsageReporter](Keywords/com/kazurayam/ks/testobject/TestObjectUsageReporter.groovy) as an example.
 
 # Conclusion
 
